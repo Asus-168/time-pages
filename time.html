@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网页时钟</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px 10px; /* 减少顶部内边距至 50px */
+            height: 100vh;
+            color: white;
+            transition: background 0.5s;
+        }
+        #time-container {
+            display: inline-block;
+            margin-bottom: 40px;
+        }
+        #current-time {
+            font-size: 3em;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            position: relative; /* 保持为相对定位 */
+        }
+        #current-date {
+            font-size: 1.5em;
+            margin-bottom: 40px;
+        }
+        #icon-container {
+            margin-top: 50px;
+            font-size: 150px;
+        }
+        #sun, #moon {
+            display: none;
+        }
+        #greeting {
+            font-size: 2em;
+            margin-top: 20px;
+        }
+        #countdown {
+            font-size: 1.5em;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div id="time-container">
+        <div id="current-time"></div>
+    </div>
+    <div id="current-date"></div>
+
+    <div id="icon-container">
+        <span id="sun">☀️</span>
+        <span id="moon">🌙</span>
+    </div>
+    <div id="greeting"></div>
+    <div id="countdown"></div>
+
+    <script>
+        // 更新背景颜色、图标、问候语和日期
+        function updateBackgroundAndIcons() {
+            const now = new Date();
+            const hours = now.getHours();
+            let gradient;
+            let sunVisible = false;
+            let moonVisible = false;
+            let greeting = '';
+
+            if (hours >= 6 && hours < 12) {
+                gradient = 'linear-gradient(to right, #87CEFA, #FFFFFF)';
+                sunVisible = true;
+                greeting = '早上好！';
+            } else if (hours >= 12 && hours < 18) {
+                gradient = 'linear-gradient(to right, #FFD700, #FF8C00)';
+                sunVisible = true;
+                greeting = '下午好！';
+            } else {
+                gradient = 'linear-gradient(to right, #2C3E50, #34495E)';
+                moonVisible = true;
+                greeting = '晚上好！';
+            }
+
+            document.body.style.background = gradient;
+            document.getElementById('sun').style.display = sunVisible ? 'inline' : 'none';
+            document.getElementById('moon').style.display = moonVisible ? 'inline' : 'none';
+            document.getElementById('greeting').innerHTML = greeting; // 更新问候语
+        }
+
+        // 更新当前时间、日期和倒计时
+        function updateTime() {
+            const now = new Date();
+            const options = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            document.getElementById('current-time').innerHTML = now.toLocaleTimeString('zh-CN', options);
+
+            const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').innerHTML = now.toLocaleDateString('zh-CN', dateOptions);
+
+            updateBackgroundAndIcons(); // 更新背景颜色、图标和问候语
+            updateCountdown(); // 更新倒计时
+        }
+
+        // 更新新年倒计时
+        function updateCountdown() {
+            const now = new Date();
+            const nextYear = new Date(now.getFullYear() + 1, 0, 1); // 下一个新年
+            const timeDiff = nextYear - now;
+
+            const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').innerHTML = `距离新年还有 ${days}天 ${hours}小时 ${minutes}分钟 ${seconds}秒`;
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime(); // 初始调用
+    </script>
+</body>
+</html>
+
+
+
